@@ -2,20 +2,87 @@
 
 namespace smarter;
 
+/**
+ * Core for all classes that access API endpoints
+ *
+ * This class handles:
+ *
+ * * Configuration
+ * * cURL Authentication
+ * * URL Generation
+ *
+ * All classes that access API endpoints extends this one.
+ *
+ * @author Caio Ferreira Silva <caio@ferreirasilva.com.br>
+ */
 abstract class core
 {
+	/**
+	 * Sandbox environment name to be used in configuration
+	 *
+	 * @var string
+	 */
 	const ENVIRONMENT_SANDBOX = 'sandbox';
+
+	/**
+	 * Production environment name to be used in configuration
+	 *
+	 * @var string
+	 */
 	const ENVIRONMENT_PRODUCTION = 'app';
+
+	/**
+	 * Domain string to be expanded when needed
+	 *
+	 * @var string
+	 * @see \smarter\core::expand()
+	 */
 	const DOMAIN = '$environment$.worksmarter.com.br';
 
+	/**
+	 * Holds default configuration set before instantiation
+	 *
+	 * @var array
+	 */
 	protected static $defaultConfig = [];
-	protected $config = [];
+
+	/**
+	 * All required items to be set before or during instantiation
+	 *
+	 * @var array
+	 */
 	protected static $required = [
 		'environment',
 		'token',
 		'organization',
 	];
 
+	/**
+	 * Holds all configuration of current instance
+	 *
+	 * Used configuration parameters are:
+	 *
+	 * * environment
+	 * * token
+	 * * organization
+	 *
+	 * Settings may vary according to each endpoint.
+	 *
+	 * @var array
+	 */
+	protected $config = [];
+
+	/**
+	 * Creates a new instance of this class
+	 *
+	 * During instantiation the constructor will validate all required
+	 * configuration settings and will throw exceptions if missing any.
+	 *
+	 * @uses \smarter\core::config()
+	 * @param array $config Key-value array, overrides prior settings
+	 * @throws \Exception If class does not have ENDPOINT constant
+	 * @throws \InvalidArgumentException If missing required setting
+	 */
 	public function __construct(array $config = [])
 	{
 		if (!defined('static::ENDPOINT')) {
@@ -32,6 +99,12 @@ abstract class core
 		}
 	}
 
+	/**
+	 * Sets configuration settings according to given array
+	 *
+	 * @param array $data Key-value array with settings
+	 * @param array $config Existing array of settings to use. Default: core::$defaultConfig
+	 */
 	public static function config(array $data, array &$config = null)
 	{
 		if (is_null($config)) {
@@ -43,6 +116,23 @@ abstract class core
 		}
 	}
 
+	/**
+	 * Expands string with configuration settings
+	 *
+	 * Expansion works by replacing keys with configuration settings. The
+	 * format is: $name$
+	 *
+	 * For instance:
+	 *
+	 * * /endpoint.json?token=$token$
+	 *
+	 * will become
+	 *
+	 * * /endpoint.json?token=123456 *
+	 *
+	 * @param string $string String to be expanded
+	 * @return string
+	 */
 	protected function expand($string)
 	{
 		$parts = explode('$', $string);
@@ -59,12 +149,22 @@ abstract class core
 		return implode(null, $parts);
 	}
 
+	/**
+	 * Sets proper authentication for the given cURL resource
+	 *
+	 * @param resource $curl Resource of type curl
+	 */
 	public function authenticate($curl)
 	{
 		curl_setopt($curl, CURLOPT_USERPWD, $this->config['token'] . ':X');
 	}
 
-
+	/**
+	 * Generates a full URL according to object's settings
+	 *
+	 * @param array $parameters Parameters to be added to final URL
+	 * @return string
+	 */
 	protected function url(array $parameters = [])
 	{
 		$protocol = $this->config['environment'] == static::ENVIRONMENT_PRODUCTION ? 'https' : 'http';
@@ -72,5 +172,8 @@ abstract class core
 		return $url . (!empty($parameters) ? '?' . http_build_query($parameters) : null);
 	}
 
+	/**
+	 * This method must be overridden with one that retrieves data from an endpoint
+	 */
 	public abstract function get();
 }

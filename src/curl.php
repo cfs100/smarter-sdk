@@ -2,17 +2,80 @@
 
 namespace smarter;
 
+/**
+ * cURL wrapper with specific API definitions
+ *
+ * This class handles:
+ *
+ * * cURL Initiation
+ * * cURL Execution
+ * * Result Instantiation
+ * * cURL Closure
+ *
+ * @author Caio Ferreira Silva <caio@ferreirasilva.com.br>
+ */
 class curl
 {
+	/**
+	 * HTTP method to retrieve data
+	 *
+	 * @var string
+	 */
 	const GET = 'GET';
+
+	/**
+	 * HTTP method to create records
+	 *
+	 * @var string
+	 */
 	const CREATE = 'POST';
+
+	/**
+	 * HTTP method to edit records
+	 *
+	 * @var string
+	 */
 	const EDIT = 'PUT';
+
+	/**
+	 * HTTP method to delete records
+	 *
+	 * @var string
+	 */
 	const DELETE = 'DELETE';
 
+	/**
+	 * Object that instantiated this class
+	 *
+	 * @var \smarter\core
+	 */
 	protected $caller;
+
+	/**
+	 * cURL resource
+	 *
+	 * @var resource
+	 */
 	protected $handler;
+
+	/**
+	 * String with raw result from request
+	 *
+	 * @var string
+	 */
 	protected $result;
 
+	/**
+	 * Creates a new instance of this class
+	 *
+	 * During instantiation the constructor will set all common cURL opts
+	 * and set post data if needed and provided.
+	 *
+	 * @param \smarter\core $caller The object that is instantiating this class
+	 * @param type $url The full URL to be requested
+	 * @param type $method The HTTP method to be used
+	 * @param array $data The data to be posted, if applies
+	 */
 	public function __construct(core $caller, $url, $method, array $data = null)
 	{
 		$this->caller = $caller;
@@ -46,17 +109,30 @@ class curl
 		}
 	}
 
+	/**
+	 * Executes the current cURL handler and returns the response HTTP code
+	 *
+	 * @return int
+	 */
 	public function execute()
 	{
 		$this->result = curl_exec($this->handler);
 		return curl_getinfo($this->handler, CURLINFO_HTTP_CODE);
 	}
 
+	/**
+	 * Decodes JSON string from last request and returns it
+	 *
+	 * @return \stdClass
+	 */
 	public function result()
 	{
 		return json_decode($this->result);
 	}
 
+	/**
+	 * The destructor handles the closure of the current cURL handler
+	 */
 	public function __destruct()
 	{
 		curl_close($this->handler);
