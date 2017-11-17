@@ -1,0 +1,24 @@
+{
+	"name": "cfs100/smarter-sdk",
+	"type": "library",
+	"description": "Smarter SDK for PHP",
+	"keywords": ["smarter", "gett", "sdk"],
+	"homepage": "https://github.com/cfs100/smarter-sdk",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Caio Ferreira Silva",
+			"email": "caio@ferreirasilva.com.br"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"smarter\\": "src"
+		}
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true
+}
