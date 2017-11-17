@@ -123,11 +123,11 @@ class curl
 	/**
 	 * Decodes JSON string from last request and returns it
 	 *
-	 * @return \stdClass
+	 * @return \smarter\result
 	 */
 	public function result()
 	{
-		return json_decode($this->result);
+		return new result($this->result);
 	}
 
 	/**
