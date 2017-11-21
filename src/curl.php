@@ -105,7 +105,7 @@ class curl
 		}
 
 		if ($addPayload && is_array($data)) {
-			curl_setopt($this->handler, CURLOPT_POSTFIELDS, $data);
+			curl_setopt($this->handler, CURLOPT_POSTFIELDS, json_encode($data));
 		}
 	}
 
@@ -121,13 +121,23 @@ class curl
 	}
 
 	/**
-	 * Decodes JSON string from last request and returns it
+	 * Decodes JSON result string from last request and returns it
 	 *
 	 * @return \smarter\result
 	 */
 	public function result()
 	{
 		return new result($this->result);
+	}
+
+	/**
+	 * Decodes JSON response string from last request and returns it
+	 *
+	 * @return array
+	 */
+	public function response()
+	{
+		return json_decode($this->result, true);
 	}
 
 	/**
