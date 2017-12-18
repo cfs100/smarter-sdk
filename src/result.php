@@ -60,6 +60,10 @@ class result
 	 */
 	public function fetch()
 	{
+		if (!isset($this->data['data'])) {
+			return false;
+		}
+
 		$this->key = key($this->data['data']);
 		if (is_null($this->key)) {
 			reset($this->data['data']);
