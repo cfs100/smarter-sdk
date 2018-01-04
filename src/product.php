@@ -34,6 +34,16 @@ class product extends core
 		return $curl->result();
 	}
 
+	public function fullDetails($id)
+	{
+		$url = $this->url() . "/{$id}";
+
+		$curl = new curl($this, $url, curl::GET);
+		$curl->execute();
+
+		return $curl->response();
+	}
+
 	public function edit($id, array $values)
 	{
 		$curl = new curl($this, "{$this->url()}/{$id}", curl::EDIT, $values);
