@@ -53,7 +53,8 @@ abstract class core
 	 */
 	protected static $required = [
 		'environment',
-		'token',
+		'user',
+		'password',
 		'organization',
 	];
 
@@ -156,7 +157,7 @@ abstract class core
 	 */
 	public function authenticate($curl)
 	{
-		curl_setopt($curl, CURLOPT_USERPWD, $this->config['token'] . ':X');
+		curl_setopt($curl, CURLOPT_USERPWD, "{$this->config['user']}:{$this->config['password']}");
 	}
 
 	/**
