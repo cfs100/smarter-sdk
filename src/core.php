@@ -56,6 +56,7 @@ abstract class core
 		'user',
 		'password',
 		'organization',
+		'company',
 	];
 
 	/**
