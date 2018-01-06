@@ -133,11 +133,12 @@ class curl
 	/**
 	 * Decodes JSON response string from last request and returns it
 	 *
-	 * @return array
+	 * @param boolean $json_decode Determines if result should be decoded
+	 * @return mixed Array, if $json_decode, or raw string
 	 */
-	public function response()
+	public function response($json_decode = true)
 	{
-		return json_decode($this->result, true);
+		return $json_decode ? json_decode($this->result, true) : $this->result;
 	}
 
 	/**
