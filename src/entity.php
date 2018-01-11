@@ -53,4 +53,14 @@ class entity extends core
 			'response' => $curl->response(),
 		];
 	}
+
+	public function edit($id, array $values)
+	{
+		$curl = new curl($this, "{$this->url()}/{$id}", curl::EDIT, ['entity' => $values]);
+
+		return [
+			'code' => $curl->execute(),
+			'response' => $curl->response(false),
+		];
+	}
 }
