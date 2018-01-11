@@ -50,7 +50,7 @@ class product extends core
 
 		return [
 			'code' => $curl->execute(),
-			'response' => $curl->response(),
+			'response' => $curl->response(false),
 		];
 	}
 }
