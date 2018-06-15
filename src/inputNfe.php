@@ -19,6 +19,11 @@ class inputNfe extends core
 	const STATUS_WAITING_STOCK = 12;
 	const STATUS_WAITING_SHIPPING = 13;
 
+	const PURPOSE_REGULAR = 1;
+	const PURPOSE_ADDITIONAL = 2;
+	const PURPOSE_ADJUST = 3;
+	const PURPOSE_RETURN = 4;
+
 	public static $statuses = [
 		self::STATUS_TYPING => 'Em digitação',
 		self::STATUS_RECEIVED => 'Lote recebido pela SEFAZ',
@@ -32,6 +37,13 @@ class inputNfe extends core
 		self::STATUS_DUPLICATED => 'Duplicada',
 		self::STATUS_WAITING_STOCK => 'Aguardando distribuição estoque',
 		self::STATUS_WAITING_SHIPPING => 'Aguardando distribuição embarque',
+	];
+
+	public static $purposes = [
+		self::PURPOSE_REGULAR => 'Normal',
+		self::PURPOSE_ADDITIONAL => 'Complementar',
+		self::PURPOSE_ADJUST => 'Ajuste',
+		self::PURPOSE_RETURN => 'Devolução',
 	];
 
 	public function get(array $params = [])
