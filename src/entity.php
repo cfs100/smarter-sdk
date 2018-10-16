@@ -26,6 +26,10 @@ class entity extends core
 			$aux['dir'] = isset($params['dir']) ? $params['dir'] : 'ASC';
 		}
 
+		if (isset($params['filters']) && $params['filters']) {
+			$aux['filters'] = json_encode($params['filters']);
+		}
+
 		$url = $this->url($aux);
 
 		$curl = new curl($this, $url, curl::GET);
