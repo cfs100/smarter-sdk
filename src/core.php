@@ -182,6 +182,17 @@ abstract class core
 	 */
 	public function get(array $params = [])
 	{
+		return $this->getCurl($params)->result();
+	}
+
+	/**
+	 * Queries Smarter using given parameters
+	 *
+	 * @param array $params
+	 * @return curl
+	 */
+	protected function getCurl(array $params = [])
+	{
 		$aux = ['_dc' => time()];
 
 		$pagination = ['start', 'limit', 'page'];
@@ -209,7 +220,7 @@ abstract class core
 		$curl = new curl($this, $url, curl::GET);
 		$curl->execute();
 
-		return $curl->result();
+		return $curl;
 	}
 
 	/**
