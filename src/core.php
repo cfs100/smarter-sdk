@@ -170,8 +170,19 @@ abstract class core
 	protected function url(array $parameters = [])
 	{
 		$protocol = $this->config['environment'] == static::ENVIRONMENT_PRODUCTION ? 'https' : 'http';
-		$url = $this->expand("{$protocol}://" . static::DOMAIN . static::ENDPOINT);
+		$url = $this->expand($this->domain() . static::ENDPOINT);
 		return $url . (!empty($parameters) ? '?' . http_build_query($parameters) : null);
+	}
+
+	/**
+	 * Generates a URL with protocol and domain according to object's settings
+	 *
+	 * @return string
+	 */
+	protected function domain()
+	{
+		$protocol = $this->config['environment'] == static::ENVIRONMENT_PRODUCTION ? 'https' : 'http';
+		return $this->expand("{$protocol}://" . static::DOMAIN);
 	}
 
 	/**
