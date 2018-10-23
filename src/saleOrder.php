@@ -46,6 +46,22 @@ class saleOrder extends core
 		self::STATUS_REGISTER_ANALYSIS => 'Análise de cadastro',
 	];
 
+	public function create(array $values)
+	{
+		$curl = new curl($this, $this->url(), curl::CREATE, ['sale_order' => $values]);
+
+		$response = [
+			'code' => $curl->execute(),
+			'response' => $curl->response(),
+		];
+
+		if ($response['code'] == 200) {
+			$response = $this->job($response['response']['token']);
+		}
+
+		return $response;
+	}
+
 	public function edit($id, array $values)
 	{
 		$curl = new curl($this, "{$this->url()}/{$id}", curl::EDIT, ['sale_order' => $values]);

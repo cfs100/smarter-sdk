@@ -248,4 +248,36 @@ abstract class core
 
 		return $curl->response();
 	}
+
+	/**
+	 * Checks for job response
+	 *
+	 * @param string $id
+	 * @return array
+	 */
+	public function job($id)
+	{
+		$response = [
+			'code' => null,
+			'response' => null,
+		];
+
+		for ($i = 0; $i < 5; $i++) {
+			sleep(2);
+
+			$curl = new curl($this, "{$this->domain()}/jobs/{$id}?_dc=" . time(), curl::GET);
+
+			$response = [
+				'code' => $curl->execute(),
+				'response' => $curl->response(),
+			];
+
+			if (isset($response['response']['id'])) {
+				$response['response'] = json_decode($response['response']['id'], true);
+				break;
+			}
+		}
+
+		return $response;
+	}
 }
