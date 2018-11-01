@@ -46,6 +46,76 @@ class saleOrder extends core
 		self::STATUS_REGISTER_ANALYSIS => 'Análise de cadastro',
 	];
 
+	public function calculate(array &$data, $id = null)
+	{
+		$baseURL = $this->expand($this->domain() . '/sale_orders/' . ((string) $id ?: 'new'));
+
+		$preCalcCurl = new curl($this, "{$baseURL}/change_nfe_setting", curl::CREATE, [
+			'company_id' => $this->expand('$company$'),
+			'nfe_setting_id' => $data['nfe_setting_id'],
+			'is_end_customer' => (boolean) $data['is_end_customer'],
+			'entity_customer_id' => $data['entity_customer_id'],
+			'sale_order' => [
+				'sale_order_products_attributes' => $data['sale_order_products_attributes'],
+			],
+		]);
+
+		$preCalcResult = [
+			'code' => $code = $preCalcCurl->execute(),
+			'response' => $preCalcCurl->response($code == 200),
+		];
+
+		if ($preCalcResult['code'] != 200) {
+			return false;
+		}
+
+		foreach ($preCalcResult['response']['sale_order_products'] as $index => $preCalc) {
+			foreach ($preCalc as $info => $value) {
+				$data['sale_order_products_attributes'][$index][$info] = $value;
+			}
+		}
+
+		$curl = new curl($this, "{$baseURL}/calculate", $id ? curl::EDIT : curl::CREATE, [
+			'company_id' => $this->expand('$company$'),
+			'sale_order' => [
+				'sale_order_products_attributes' => $data['sale_order_products_attributes'],
+				'nfe_setting_id' => $data['nfe_setting_id'],
+				'sale_commission_table_id' => $data['sale_commission_table_id'],
+				'entity_customer_id' => $data['entity_customer_id'],
+				'discount_amount' => $data['discount_amount'],
+				'discount_at' => $data['discount_at'],
+				'discount_calc_rule' => $data['discount_calc_rule'],
+				'discount_application' => $data['discount_application'],
+				'discount_percent' => $data['discount_percent'],
+				'discount_type' => $data['discount_type'],
+				'freight_amount' => $data['freight_amount'],
+				'insurance_amount' => $data['insurance_amount'],
+				'is_end_customer' => (boolean) $data['is_end_customer'],
+
+				'notes' => '',
+			],
+		]);
+
+		$response = [
+			'code' => $code = $curl->execute(),
+			'response' => $curl->response($code == 200),
+		];
+
+		if ($response['code'] != 200) {
+			return false;
+		}
+
+		foreach ($response['response'] as $field => $value) {
+			if (is_array($value)) {
+				continue;
+			}
+
+			$data[$field] = $value;
+		}
+
+		return true;
+	}
+
 	public function create(array $values)
 	{
 		$curl = new curl($this, $this->url(), curl::CREATE, ['sale_order' => $values]);
