@@ -91,8 +91,7 @@ class saleOrder extends core
 				'freight_amount' => $data['freight_amount'],
 				'insurance_amount' => $data['insurance_amount'],
 				'is_end_customer' => (boolean) $data['is_end_customer'],
-
-				'notes' => '',
+				'notes' => $data['notes'],
 			],
 		]);
 
