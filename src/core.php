@@ -169,7 +169,6 @@ abstract class core
 	 */
 	protected function url(array $parameters = [])
 	{
-		$protocol = $this->config['environment'] == static::ENVIRONMENT_PRODUCTION ? 'https' : 'http';
 		$url = $this->expand($this->domain() . static::ENDPOINT);
 		return $url . (!empty($parameters) ? '?' . http_build_query($parameters) : null);
 	}
