@@ -77,7 +77,7 @@ class saleOrder extends core
 
 		$curl = new curl($this, "{$baseURL}/calculate", $id ? curl::EDIT : curl::CREATE, [
 			'company_id' => $this->expand('$company$'),
-			'sale_order' => [
+			'sale_order' => array_merge($data, [
 				'sale_order_products_attributes' => $data['sale_order_products_attributes'],
 				'nfe_setting_id' => $data['nfe_setting_id'],
 				'sale_commission_table_id' => $data['sale_commission_table_id'],
@@ -92,7 +92,7 @@ class saleOrder extends core
 				'insurance_amount' => $data['insurance_amount'],
 				'is_end_customer' => (boolean) $data['is_end_customer'],
 				'notes' => $data['notes'],
-			],
+			]),
 		]);
 
 		$response = [
