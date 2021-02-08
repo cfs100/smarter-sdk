@@ -10,10 +10,16 @@ class salePriceTable extends core
 	{
 		$curl = new curl($this, $this->url(), curl::CREATE, ['sale_price_table' => $values]);
 
-		return [
+		$response = [
 			'code' => $curl->execute(),
-			'response' => $curl->response(false),
+			'response' => $curl->response(),
 		];
+
+		if ($response['code'] == 200) {
+			$response['response'] = $this->job($response['response']['token'])['response']['id'];
+		}
+
+		return $response;
 	}
 
 	public function edit($id, array $values)
