@@ -29,7 +29,7 @@ abstract class core
 	 *
 	 * @var string
 	 */
-	const ENVIRONMENT_PRODUCTION = 'app';
+	const ENVIRONMENT_PRODUCTION = 'app-legacy';
 
 	/**
 	 * Domain string to be expanded when needed
